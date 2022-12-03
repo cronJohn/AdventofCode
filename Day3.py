@@ -2,6 +2,7 @@ def getHalf(string):
     return int(len(string)/2)
 
 total = 0
+group = 0
 
 ratings = {
         'a': 1,
@@ -32,25 +33,31 @@ ratings = {
         'z': 26,
 }
 
+temp = []
+
 with open('day3-input.txt','r') as inputObj:
         line = inputObj.readline()
 
         while line:
             word = str(line.strip())
-            totalhalf = getHalf(word)
+            temp.append(word)
+            group += 1
 
-            first = word[:totalhalf]
-            second = word[totalhalf:]
+            #totalhalf = getHalf(word)
 
-            # Find intersection
-            union = set(first).intersection(second)
-
-            for i in union:
-                if i.isupper():
-                    total += ratings[i.lower()] + 26
-                else:
-                    total += ratings[i.lower()]
+            #first = word[:totalhalf]
+            #second = word[totalhalf:]
 
             line = inputObj.readline()
-
+            
+            if (group % 3 == 0) and (group != 0):
+                union = set(temp[0]).intersection(temp[1], temp[2])
+                for i in union:
+                    if i.isupper():
+                        total += ratings[i.lower()] + 26
+                    else:
+                        total += ratings[i.lower()]
+                temp = []
+                group = 0
+                union = []
 print(total)
