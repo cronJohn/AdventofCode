@@ -7,6 +7,11 @@ def isCompleteRange(x1, y1, x2, y2):
             return False
     return True
 
+def isSomeOverlap(x1, y1, x2, y2):
+    # Based on: https://stackoverflow.com/questions/64745139/check-if-two-integer-ranges-overlap
+    return max(x1,x2) < min(y1+1,y2+1) # Add +1 to mimic Python range (end being exclusive)
+
+
 with open('day4-input.txt','r') as inputObj:
         line = inputObj.readline()
 
@@ -19,7 +24,9 @@ with open('day4-input.txt','r') as inputObj:
                 for x in other: # Loop through each part of the range
                     temp.append(int(x))
             x1, y1, x2, y2 = temp
-            if isCompleteRange(x1, y1, x2, y2):
+            #if isCompleteRange(x1, y1, x2, y2):
+             #   total += 1
+            if isSomeOverlap(x1,y1,x2,y2):
                 total += 1
 
             line = inputObj.readline()
