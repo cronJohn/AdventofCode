@@ -29,6 +29,21 @@ def getNumberOfCols(string):
 def getColumn(array, index):
     return [row[index] for row in array]
 
+def moveCrate(moveAmount, fromCrateNum, toCrateNum):
+    toBeMoved = []
+    fromCrate = craneColumns[fromCrateNum - 1]
+    for i in range(0, moveAmount):
+        if fromCrate: # Only run if row still has crates in it
+            toBeMoved.append(fromCrate[0])
+            fromCrate.pop(0)
+
+    for char in toBeMoved:
+        craneColumns[toCrateNum - 1].insert(0, char)
+
+def parseCrate(string):
+    temp = string.split(' ')
+    moveCrate(int(temp[1]), int(temp[3]), int(temp[5].strip()))
+
 numberOfCols = 0
 with open('day5-input.txt','r') as inputObj:
         line = inputObj.readline()
@@ -48,7 +63,7 @@ with open('day5-input.txt','r') as inputObj:
         tidiedRows = getTidiedRows(numberOfCols)
         craneColumns = []
 
-        for i in range(0, len(tidiedRows)):
+        for i in range(0, len(tidiedRows)+1):
             craneColumns.append(getColumn(tidiedRows, i)) # Convert columns to rows
 
         for i in range(0, len(craneColumns)):
@@ -56,4 +71,18 @@ with open('day5-input.txt','r') as inputObj:
 
         for col in craneColumns:
             print(col)
+
+        while line:
+            line = inputObj.readline()
+            line = str(line)
+            if (not line.isspace()) and (line != ''):
+                parseCrate(line)
+
+        output_str = ''
+        for column in craneColumns:
+            output_str += column[0]
+
+        print(output_str)
+
+
 
