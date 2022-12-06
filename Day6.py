@@ -5,11 +5,11 @@ output_num = 0
 def parse(string, start):
     global shouldEscape
 
-    length = 4
-    combo_len = len(set(string[start:start+4]))
+    length = 14
+    combo_len = len(set(string[start:start+length]))
     if combo_len == length:
         shouldEscape = True
-        return start + 4
+        return start + length
     return 0
         
 with open('day6-input.txt','r') as inputObj:
