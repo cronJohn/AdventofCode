@@ -15,13 +15,25 @@ with open('day5-input.txt','r') as inputObj:
 
             line = inputObj.readline()
 
+tidiedRows = []
+start = 0
+finished = False
 print(f'crane board: {craneBoardArr}')
-rows = []
 for row in craneBoardArr:
-    temp = row.split(' ')
+    while not finished:
+        print(f'starting deal: {row[start:start+3]}')
+        if row[start:start+3] == "   ":
+            tidiedRows.append('⨯')
+        else:
+            tidiedRows.append(row[start+1:start+2])
 
-    rows.append(temp)
-    print(f'row length: {len(temp)}')
-    print(f'row: "{row}"')
+        start += 4
 
-print(f'new array: {rows}')
+        if start > 35:
+            finished = True 
+
+    finished = False
+    start = 0
+    print('--------------------------------')
+
+print(f'new array: {tidiedRows}')
