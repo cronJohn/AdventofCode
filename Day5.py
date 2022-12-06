@@ -37,8 +37,13 @@ def moveCrate(moveAmount, fromCrateNum, toCrateNum):
             toBeMoved.append(fromCrate[0])
             fromCrate.pop(0)
 
-    for char in toBeMoved:
+
+    #for char in toBeMoved:   # Part one implementation
+        #craneColumns[toCrateNum - 1].insert(0, char)
+
+    for char in toBeMoved[::-1]:    # Part 2 implementation
         craneColumns[toCrateNum - 1].insert(0, char)
+
 
 def parseCrate(string):
     temp = string.split(' ')
