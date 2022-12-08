@@ -29,7 +29,9 @@ def parse(string):
         else:
             cwd[y] = int(x)
 
+temp = []
 def loop(dir = root):
+    global temp
     if type(dir) == int:
         return (dir, 0)
 
@@ -43,6 +45,8 @@ def loop(dir = root):
 
     if size <= threshold:
         ans += size
+
+    temp.append(size)
     return (size, ans)
 
 with open('day7-input.txt','r') as inputObj:
@@ -52,4 +56,16 @@ with open('day7-input.txt','r') as inputObj:
         parse(line)
         line = inputObj.readline().strip()
 
-print(loop()[1])
+loop()
+total_size = 70000000
+target_unused_size = 30000000
+
+temp.sort(reverse=True)
+
+other = []
+for num in temp:
+    unused = total_size - temp[0]
+    if (num + unused) >= target_unused_size:
+        other.append(num)
+
+print(f'answer: {min(other)}') 
