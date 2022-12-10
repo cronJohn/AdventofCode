@@ -1,71 +1,20 @@
-board = [
-        [".",".",".",".",".","."],
-        [".",".",".",".",".","."],
-        [".",".",".",".",".","."],
-        [".",".",".",".",".","."],
-        [".",".",".",".",".","."],
-        ]
+headLocation = [0,0]
+tailLocation = [0,0]
 
-rightBounds = len(board[0]) - 1 # X
-bottomBounds = len(board) - 1 # Y
+moves = {
+        "D": [0,-1],
+        "U": [0, 1],
+        "L": [-1, 0],
+        "R": [1, 0]
+}
 
-headLocation = [0,bottomBounds]
-tailLocation = [0,bottomBounds]
+previousLocations = set()
 
+def inRange():
+    return abs(headLocation[0] - tailLocation[0]) <= 1 and abs(headLocation[1] - tailLocation[1]) <= 1
 
-
-def isInRange():
-    # Check x locations
-    if ((headLocation[0] not in range(tailLocation[0] - 1, tailLocation[0] + 2)) or  
-    # Check y locations
-        (headLocation[1] not in range(tailLocation[1] - 1, tailLocation[0] + 2))):  
-            return False
-
-def moveDiagonal(direction):
-    # Works under the condition that the head has already moved
-    if direction == "U":
-        tailLocation = [headLocation[0], headLocation[1] + 1]
-
-    if direction == "D":
-        tailLocation = [headLocation[0], headLocation[1] - 1]
-
-    if direction == "L":
-        tailLocation = [headLocation[0] + 1, headLocation[1]]
-
-    if direction == "R":
-        tailLocation = [headLocation[0] - 1, headLocation[1]]
-
-def moveRegular(direction):
-    if direction == "U":
-        tailLocation = [headLocation[0], headLocation[1] - 1]
-
-    if direction == "D":
-        tailLocation = [headLocation[0], headLocation[1] + 1]
-
-    if direction == "L":
-        tailLocation = [headLocation[0] - 1, headLocation[1]]
-
-    if direction == "R":
-        tailLocation = [headLocation[0] + 1, headLocation[1]]
-
-
-def isRegularMove():
-    if (((headLocation[0] in range(tailLocation[0] - 2, tailLocation[0] + 2)) and (headLocation[1] == tailLocation[1])) or
-        ((headLocation[1] in range(tailLocation[1] - 2, tailLocation[1] + 2)) and (headLocation[0] == tailLocation[0]))):
-                return True
-
-def stampOcto():
-    board[tailLocation[1]][tailLocation[0]] = "#"
-
-def determineCorrectDirection(direction):
-    if isInRange():
-        pass # Don't move it
-    else:
-        if isRegularMove():
-            moveRegular(direction)
-        else:
-            moveDiagonal(direction)
-        stampOcto()
+def addPreviousLocation():
+    previousLocations.add((tailLocation[0], tailLocation[1]))
 
 def parse(string):
     temp = string.split(" ")
@@ -73,41 +22,31 @@ def parse(string):
     direction = temp[0]
     amount = int(temp[1])
 
-    print(f'head | x: {headLocation[0]} y: {headLocation[1]}')
-    print(f'tail | x: {tailLocation[0]} y: {tailLocation[1]}')
+    dx, dy = moves[direction]
+    
+    for _ in range(amount):
+        move(dx,dy)
+        addPreviousLocation()
 
-    move(amount, direction)
+def move(dx, dy):
+    global headLocation, tailLocation
 
-    print(f'head | x: {headLocation[0]} y: {headLocation[1]}')
-    print(f'tail | x: {tailLocation[0]} y: {tailLocation[1]}')
+    headLocation[0] += dx
+    headLocation[1] += dy
 
-def move(amount, direction):
-    print(f'moving {direction} by {amount} units')
-    for i in range(0, amount):
-        if direction == "U":
-            headLocation[1] += 1
+    if not inRange():
+        sign_x = 0 if headLocation[0] == tailLocation[0] else (headLocation[0] - tailLocation[0]) / abs(headLocation[0] - tailLocation[0])
+        sign_y = 0 if headLocation[1] == tailLocation[1] else (headLocation[1] - tailLocation[1]) / abs(headLocation[1] - tailLocation[1])
 
-        if direction == "D":
-            headLocation[1] -= 1
-
-        if direction == "L":
-            tailLocation[0] -= 1
-
-        if direction == "R":
-            tailLocation[0] += 1
-
-        determineCorrectDirection(direction)
-
-stampOcto()
+        tailLocation[0] += sign_x
+        tailLocation[1] += sign_y
 
 with open('day9-input.txt','r') as inputObj:
         line = inputObj.readline().strip()
 
         while line:
-            for deal in board:
-                print(deal)
             parse(line)
             line = inputObj.readline().strip()
 
-print(board)
+print(len(previousLocations))
 
